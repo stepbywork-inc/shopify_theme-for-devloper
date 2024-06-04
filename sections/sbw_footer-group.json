@@ -1,10 +1,11 @@
 {
-  "name": "フッター",
+  "name": "sbw_footer",
   "type": "footer",
   "sections": {
     "sbw_footer": {
       "type": "sbw_footer",
       "settings": {
+        "menu": "main-menu"
       }
     }
   }

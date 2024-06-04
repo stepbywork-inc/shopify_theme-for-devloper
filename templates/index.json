@@ -1,5 +1,8 @@
 {
   "sections": {
+    "sbw_page-top": {
+      "type": "sbw_page-top"
+    },
     "featured_collection": {
       "type": "featured-collection",
       "settings": {
@@ -202,6 +205,7 @@
     }
   },
   "order": [
+    "sbw_page-top",
     "featured_collection",
     "38cdf60f-e431-43b5-aac3-7e6215447d67",
     "featured_product_K6tPqt",

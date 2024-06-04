@@ -1,0 +1,384 @@
+<section>
+  <h2>商品リスト</h2>
+  <ol
+    role="list"
+  >
+    {%- for product in collections['all-items'].products limit: 4 -%}
+      <li>
+        {%- if product.featured_media -%}
+          <img
+            srcset="
+              {%- if product.featured_media.width >= 165 -%}{{ product.featured_media | image_url: width: 165 }} 165w,{%- endif -%}
+              {%- if product.featured_media.width >= 360 -%}{{ product.featured_media | image_url: width: 360 }} 360w,{%- endif -%}
+              {%- if product.featured_media.width >= 533 -%}{{ product.featured_media | image_url: width: 533 }} 533w,{%- endif -%}
+              {%- if product.featured_media.width >= 720 -%}{{ product.featured_media | image_url: width: 720 }} 720w,{%- endif -%}
+              {%- if product.featured_media.width >= 940 -%}{{ product.featured_media | image_url: width: 940 }} 940w,{%- endif -%}
+              {%- if product.featured_media.width >= 1066 -%}{{ product.featured_media | image_url: width: 1066 }} 1066w,{%- endif -%}
+              {{ product.featured_media | image_url }} {{ product.featured_media.width }}w
+            "
+            src="{{ product.featured_media | image_url: width: 533 }}"
+            alt="{{ product.featured_media.alt | escape }}"
+            width="{{ product.featured_media.width }}"
+            height="{{ product.featured_media.height }}"
+          >
+          {%- if product.media[1] != null -%}
+            <img
+              srcset="
+                {%- if product.media[1].width >= 165 -%}{{ product.media[1] | image_url: width: 165 }} 165w,{%- endif -%}
+                {%- if product.media[1].width >= 360 -%}{{ product.media[1] | image_url: width: 360 }} 360w,{%- endif -%}
+                {%- if product.media[1].width >= 533 -%}{{ product.media[1] | image_url: width: 533 }} 533w,{%- endif -%}
+                {%- if product.media[1].width >= 720 -%}{{ product.media[1] | image_url: width: 720 }} 720w,{%- endif -%}
+                {%- if product.media[1].width >= 940 -%}{{ product.media[1] | image_url: width: 940 }} 940w,{%- endif -%}
+                {%- if product.media[1].width >= 1066 -%}{{ product.media[1] | image_url: width: 1066 }} 1066w,{%- endif -%}
+                {{ product.media[1] | image_url }} {{ product.media[1].width }}w
+              "
+              src="{{ product.media[1] | image_url: width: 533 }}"
+              width="{{ product.media[1].width }}"
+              height="{{ product.media[1].height }}"
+            >
+          {%- endif -%}
+        {%- endif -%}
+        <h3>
+          <a
+            href="{{ product.url }}"
+            aria-labelledby="CardLink-{{ section_id }}-{{ product.id }}"
+          >
+            {{ product.title | escape }}
+          </a>
+        </h3>
+        <ul>
+          <li>商品タイプ：{{ product.type }}</li>
+          <li>販売元：{{ product.vendor }}</li>
+          <li>
+            タグ：
+            {%- for tag in product.tags -%}
+              {{ tag }}
+            {%- endfor -%}
+          </li>
+          <li>メタフィールド1：{{ product.metafields.test_data.binding_mount }}</li>
+          <li>
+            メタフィールド2：{{ product.metafields.test_data.snowboard_length.value -}}
+            {{- product.metafields.test_data.snowboard_length.unit }}
+          </li>
+        </ul>
+        <div>
+          {%- liquid
+            assign target = product
+            assign compare_at_price = target.compare_at_price
+            assign price = target.price | default: 1999
+            assign available = target.available | default: false
+            assign money_price = price | money
+
+            if target == product and product.price_varies
+              assign money_price = money_price | append: 'から'
+            endif
+          -%}
+
+          <div
+            class="
+              {%- if available == false %} is-sold-out {% endif -%}
+              {%- if compare_at_price > price %} is-on-sale {% endif -%}
+            "
+          >
+            <div>価格：{{ money_price }}</div>
+            {%- if product.price_varies == false and compare_at_price > price %}
+              割引前価格：
+              <s>
+                {{ compare_at_price | money }}
+              </s>
+            {%- endif -%}
+          </div>
+        </div>
+        <div>
+          {%- if product.available == false -%}
+            売り切れ
+          {%- elsif product.compare_at_price > product.price and product.available -%}
+            セール中
+          {%- endif -%}
+        </div>
+      </li>
+    {%- endfor -%}
+  </ol>
+</section>
+<section>
+  <h2>コレクションリスト</h2>
+  <ul
+    role="list"
+  >
+    <li>
+      {%- assign card_collection = collections['automated-collection'] -%}
+      {%- if card_collection.featured_image -%}
+        <img
+          srcset="
+            {%- if card_collection.featured_image.width >= 165 -%}{{ card_collection.featured_image | image_url: width: 165 }} 165w,{%- endif -%}
+            {%- if card_collection.featured_image.width >= 330 -%}{{ card_collection.featured_image | image_url: width: 330 }} 330w,{%- endif -%}
+            {%- if card_collection.featured_image.width >= 535 -%}{{ card_collection.featured_image | image_url: width: 535 }} 535w,{%- endif -%}
+            {%- if card_collection.featured_image.width >= 750 -%}{{ card_collection.featured_image | image_url: width: 750 }} 750w,{%- endif -%}
+            {%- if card_collection.featured_image.width >= 1000 -%}{{ card_collection.featured_image | image_url: width: 1000 }} 1000w,{%- endif -%}
+            {%- if card_collection.featured_image.width >= 1500 -%}{{ card_collection.featured_image | image_url: width: 1500 }} 1500w,{%- endif -%}
+            {%- if card_collection.featured_image.width >= 3000 -%}{{ card_collection.featured_image | image_url: width: 3000 }} 3000w,{%- endif -%}
+            {{ card_collection.featured_image | image_url }} {{ card_collection.featured_image.width }}w
+          "
+          src="{{ card_collection.featured_image | image_url: width: 1500 }}"
+          sizes="
+            (min-width: {{ settings.page_width }}px) {{ settings.page_width | minus: 100 | divided_by: columns }}px,
+            (min-width: 750px) {% if columns > 1 %}calc((100vw - 10rem) / 2){% else %}calc(100vw - 10rem){% endif %},
+            calc(100vw - 3rem)
+          "
+          alt=""
+          height="{{ card_collection.featured_image.height }}"
+          width="{{ card_collection.featured_image.width }}"
+          loading="lazy"
+          class="motion-reduce"
+        >
+      {%- endif -%}
+      <h3>
+        <a
+          {% if card_collection == blank %}
+            role="link" aria-disabled="true"
+          {% else %}
+            href="{{ card_collection.url }}"
+          {% endif %}
+        >
+          {{- card_collection.title | escape -}}
+        </a>
+      </h3>
+      {%- if card_collection.description != blank -%}
+        <p>
+          {{- card_collection.description | strip_html | truncatewords: 12 -}}
+        </p>
+      {%- endif -%}
+    </li>
+    <li>
+      {%- assign card_collection = collections['all-items'] -%}
+      {%- if card_collection.featured_image -%}
+        <img
+          srcset="
+            {%- if card_collection.featured_image.width >= 165 -%}{{ card_collection.featured_image | image_url: width: 165 }} 165w,{%- endif -%}
+            {%- if card_collection.featured_image.width >= 330 -%}{{ card_collection.featured_image | image_url: width: 330 }} 330w,{%- endif -%}
+            {%- if card_collection.featured_image.width >= 535 -%}{{ card_collection.featured_image | image_url: width: 535 }} 535w,{%- endif -%}
+            {%- if card_collection.featured_image.width >= 750 -%}{{ card_collection.featured_image | image_url: width: 750 }} 750w,{%- endif -%}
+            {%- if card_collection.featured_image.width >= 1000 -%}{{ card_collection.featured_image | image_url: width: 1000 }} 1000w,{%- endif -%}
+            {%- if card_collection.featured_image.width >= 1500 -%}{{ card_collection.featured_image | image_url: width: 1500 }} 1500w,{%- endif -%}
+            {%- if card_collection.featured_image.width >= 3000 -%}{{ card_collection.featured_image | image_url: width: 3000 }} 3000w,{%- endif -%}
+            {{ card_collection.featured_image | image_url }} {{ card_collection.featured_image.width }}w
+          "
+          src="{{ card_collection.featured_image | image_url: width: 1500 }}"
+          sizes="
+            (min-width: {{ settings.page_width }}px) {{ settings.page_width | minus: 100 | divided_by: columns }}px,
+            (min-width: 750px) {% if columns > 1 %}calc((100vw - 10rem) / 2){% else %}calc(100vw - 10rem){% endif %},
+            calc(100vw - 3rem)
+          "
+          alt=""
+          height="{{ card_collection.featured_image.height }}"
+          width="{{ card_collection.featured_image.width }}"
+          loading="lazy"
+          class="motion-reduce"
+        >
+      {%- endif -%}
+      <h3>
+        <a
+          {% if card_collection == blank %}
+            role="link" aria-disabled="true"
+          {% else %}
+            href="{{ card_collection.url }}"
+          {% endif %}
+        >
+          {{- card_collection.title | escape -}}
+        </a>
+      </h3>
+      {%- if card_collection.description != blank -%}
+        <p>
+          {{- card_collection.description | strip_html | truncatewords: 12 -}}
+        </p>
+      {%- endif -%}
+    </li>
+  </ul>
+</section>
+<section>
+  <h2>特集商品</h2>
+  <div>
+    {%- assign target_product = all_products['selling-plans-ski-wax'] -%}
+    {%- if target_product.selected_or_first_available_variant.featured_media != null -%}
+      {%- assign media = target_product.selected_or_first_available_variant.featured_media -%}
+      <div class="product__media-item" data-media-id="{{ section.id }}-{{ media.id }}">
+        {% render 'product-thumbnail',
+          media: media,
+          position: 'featured',
+          loop: section.settings.enable_video_looping,
+          modal_id: section.id,
+          xr_button: false,
+          media_width: media_width,
+          media_fit: section.settings.media_fit,
+          constrain_to_viewport: section.settings.constrain_to_viewport
+        %}
+      </div>
+    {%- endif -%}
+    {%- liquid
+      assign media_to_render = product.featured_media.id
+      for variant in product.variants
+        assign media_to_render = media_to_render | append: variant.featured_media.id | append: ' '
+      endfor
+    -%}
+    {%- for media in product.media -%}
+      {%- if media_to_render contains media.id
+        and media.id != product.selected_or_first_available_variant.featured_media.id
+      -%}
+        <div class="product__media-item" data-media-id="{{ section.id }}-{{ media.id }}">
+          {% render 'product-thumbnail',
+            media: media,
+            position: forloop.index,
+            loop: section.settings.enable_video_looping,
+            modal_id: section.id,
+            xr_button: false,
+            media_width: media_width,
+            media_fit: section.settings.media_fit,
+            constrain_to_viewport: section.settings.constrain_to_viewport
+          %}
+        </div>
+      {%- endif -%}
+    {%- endfor -%}
+  </div>
+  <div class="product__info-wrapper grid__item">
+    <product-info
+      data-section="{{ section.id }}"
+      data-url="{{ target_product.url }}"
+    >
+      {%- assign product_form_id = 'product-form-' | append: section.id -%}
+      <h3>
+        {{ target_product.title | escape }}
+      </h3>
+      <ul>
+        <li>商品タイプ：{{ target_product.type }}</li>
+        <li>販売元：{{ target_product.vendor }}</li>
+        <li>
+          タグ：
+          {%- for tag in target_product.tags -%}
+            {{ tag }}
+          {%- endfor -%}
+        </li>
+        <li>メタフィールド1：{{ target_product.metafields.test_data.binding_mount }}</li>
+        <li>
+          メタフィールド2：{{ target_product.metafields.test_data.snowboard_length.value -}}
+          {{- target_product.metafields.test_data.snowboard_length.unit }}
+        </li>
+      </ul>
+      <div>
+        {%- liquid
+          assign target = target_product
+          assign compare_at_price = target.compare_at_price
+          assign price = target.price | default: 1999
+          assign available = target.available | default: false
+          assign money_price = price | money
+
+          if target == target_product and target_product.price_varies
+            assign money_price = money_price | append: 'から'
+          endif
+        -%}
+
+        <div
+          class="
+            {%- if available == false %} is-sold-out {% endif -%}
+            {%- if compare_at_price > price %} is-on-sale {% endif -%}
+          "
+        >
+          <div>価格：{{ money_price }}</div>
+          {%- if product.price_varies == false and compare_at_price > price %}
+            割引前価格：
+            <s>
+              {{ compare_at_price | money }}
+            </s>
+          {%- endif -%}
+        </div>
+      </div>
+      <div>
+        {%- if target_product.available == false -%}
+          売り切れ
+        {%- elsif target_product.compare_at_price > target_product.price and target_product.available -%}
+          セール中
+        {%- endif -%}
+      </div>
+      {%- if target_product != blank -%}
+        {%- for target_varient in target_product.variants -%}
+          {%- form 'product', target_product -%}
+            <table>
+              <tr>
+                <td>
+                  {% if target_varient.image %}
+                    <img
+                      src="{{ target_varient.image | image_url: width: 86 }}"
+                      alt="{{ target_varient.title | escape }}"
+                    >
+                  {% endif %}
+                </td>
+                <td>
+                  {%- assign cart_qty = cart | item_count_for_variant: target_varient.id -%}
+                  <input type="hidden" name="id" value="{{ target_varient.id }}">{{ target_varient.title -}}
+                  (カートの中
+                  {{ cart_qty }}
+                  )
+                </td>
+                <td>
+                  <input
+                    type="number"
+                    name="quantity"
+                    id="quantity"
+                    value="{{ target_varient.quantity_rule.min }}"
+                  >
+                </td>
+                <td>
+                  {%- liquid
+                    assign compare_at_price = target_varient.compare_at_price
+                    assign price = target_varient.price | default: 1999
+                    assign available = target_varient.available | default: false
+                    assign money_price = price | money
+                  -%}
+
+                  <div
+                    class="
+                      {%- if available == false %} is-sold-out {% endif -%}
+                      {%- if compare_at_price > price %} is-on-sale {% endif -%}
+                    "
+                  >
+                    <div>価格：{{ money_price }}</div>
+                    {%- if target_varient.compare_at_price > target_varient.price %}
+                      割引前価格：
+                    <s>
+                      {{ compare_at_price | money }}
+                    </s>
+                    {%- endif -%}
+                  </div>
+                </td>
+                <td>
+                  <button type="submit">カートに入れる</button>
+                </td>
+              </tr>
+            </table>
+            {{ form | payment_terms }}
+          {%- endform -%}
+        {%- endfor -%}
+      {%- endif -%}
+      <a
+        {% if target_product == blank %}
+          role="link" aria-disabled="true"
+        {% else %}
+          href="{{ target_product.url }}"
+        {% endif %}
+      >
+        詳細ページへ
+      </a>
+    </product-info>
+  </div>
+</section>
+<section>
+  <h2>newsletter</h2>
+</section>
+<section>
+  <h2>contact-form</h2>
+</section>
+<section>
+  <h2>featured-blog</h2>
+</section>
+<section>
+  <h2>page</h2>
+</section>

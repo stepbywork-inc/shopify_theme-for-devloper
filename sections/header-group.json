@@ -10,8 +10,5 @@
         "menu": "main-menu"
       }
     }
-  },
-  "order": [
-    "header"
-  ]
+  }
 }

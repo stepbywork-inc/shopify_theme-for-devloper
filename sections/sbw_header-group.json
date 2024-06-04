@@ -1,6 +1,6 @@
 {
-  "name": "sbw_header",
   "type": "header",
+  "name": "Group name",
   "sections": {
     "sbw_header": {
       "type": "sbw_header",

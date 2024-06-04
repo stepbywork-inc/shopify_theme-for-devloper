@@ -59,14 +59,10 @@
   </head>
 
   <body>
-
     {% sections 'sbw_header-group' %}
-
-    {% sections 'sbw_footer-group' %}
     <main role="main" tabindex="-1">
       {{ content_for_layout }}
     </main>
-
-
+    {% sections 'sbw_footer-group' %}
   </body>
 </html>

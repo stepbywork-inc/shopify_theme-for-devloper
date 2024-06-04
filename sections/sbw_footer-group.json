@@ -8,5 +8,8 @@
         "menu": "main-menu"
       }
     }
-  }
+  },
+  "order":[
+    "sbw_footer"
+  ]
 }

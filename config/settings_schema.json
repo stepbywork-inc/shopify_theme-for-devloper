@@ -1,11 +1,9 @@
 [
   {
-    "name": "theme_info",
-    "theme_name": "Generated Data Theme",
+    "name": "漢のshopifyテーマ",
+    "theme_name": "theme for devloper",
     "theme_version": "1.0.0",
-    "theme_author": "Shopify",
-    "theme_documentation_url": "https:\/\/shopify.dev\/docs\/apps\/tools\/development-stores\/generated-data#themes\/",
-    "theme_support_url": "https:\/\/shopify.dev\/docs\/apps\/tools\/development-stores\/generated-data#themes\/"
+    "theme_author": "株式会社ステップバイワーク"
   },
   {
     "name": "t:settings_schema.logo.name",

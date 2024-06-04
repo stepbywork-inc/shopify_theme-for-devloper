@@ -59,3 +59,14 @@ ol,
 table {
   margin: 1em;
 }
+
+body {
+  max-width: 1000px;
+  padding: 20px;
+}
+main {
+  margin: 100px 0;
+  padding: 100px 0;
+  border-top: 1px solid #000;
+  border-bottom: 1px solid #000;
+}

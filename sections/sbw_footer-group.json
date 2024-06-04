@@ -2,8 +2,8 @@
   "name": "フッター",
   "type": "footer",
   "sections": {
-    "footer": {
-      "type": "footer",
+    "sbw_footer": {
+      "type": "sbw_footer",
       "settings": {
       }
     }

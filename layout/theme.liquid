@@ -55,18 +55,18 @@
     {{ content_for_header }}
 
     {{ 'base.css' | asset_url | stylesheet_tag }}
-    {% comment %} {{ 'mystyle.css' | asset_url | stylesheet_tag }} {% endcomment %}
+    {% comment %} {{ 'sbw_base.css' | asset_url | stylesheet_tag }} {% endcomment %}
   </head>
 
   <body class="gradient">
 
-    {% sections 'header-group' %}
+    {% sections 'sbw_header-group' %}
 
     <main role="main" tabindex="-1">
       {{ content_for_layout }}
     </main>
 
-    {% sections 'footer-group' %}
+    {% sections 'sbw_footer-group' %}
 
   </body>
 </html>

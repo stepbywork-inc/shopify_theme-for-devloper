@@ -1,1 +1,10 @@
-{"sections":{"main":{"type":"main-page","settings":{"padding_top":28,"padding_bottom":28}}},"order":["main"]}
+{
+  "sections": {
+    "sbw_page-default": {
+      "type": "sbw_page-default",
+    }
+  },
+  "order": [
+    "sbw_page-default"
+  ]
+}

@@ -343,9 +343,9 @@
                     <div>価格：{{ money_price }}</div>
                     {%- if target_varient.compare_at_price > target_varient.price %}
                       割引前価格：
-                    <s>
-                      {{ compare_at_price | money }}
-                    </s>
+                      <s>
+                        {{ compare_at_price | money }}
+                      </s>
                     {%- endif -%}
                   </div>
                 </td>
@@ -372,13 +372,220 @@
 </section>
 <section>
   <h2>newsletter</h2>
+  {% form 'customer', class: 'newsletter-form' %}
+    <input type="hidden" name="contact[tags]" value="newsletter">
+    <div>
+      <input
+        id="NewsletterForm--{{ section.id }}"
+        type="email"
+        name="contact[email]"
+        class="field__input"
+        value="{{ form.email }}"
+        aria-required="true"
+        autocorrect="off"
+        autocapitalize="off"
+        autocomplete="email"
+        {% if form.errors %}
+          autofocus
+          aria-invalid="true"
+          aria-describedby="Newsletter-error--{{ section.id }}"
+        {% elsif form.posted_successfully? %}
+          aria-describedby="Newsletter-success--{{ section.id }}"
+        {% endif %}
+        placeholder="メール会員"
+        required
+      >
+      <label class="field__label" for="NewsletterForm--{{ section.id }}"> メール会員 </label>
+      <button
+        type="submit"
+        class="newsletter-form__button field__button"
+        name="commit"
+        id="Subscribe"
+        aria-label="メール会員"
+      ></button>
+    </div>
+    {%- if form.errors -%}
+      {{- form.errors.translated_fields.email | capitalize }}
+      {{ form.errors.messages.email -}}
+    {%- endif -%}
+    {%- if form.posted_successfully? -%}
+      会員登録完了
+    {%- endif -%}
+  {% endform %}
 </section>
 <section>
   <h2>contact-form</h2>
+  {%- form 'contact', id: 'ContactForm', class: 'isolate' -%}
+    {%- if form.posted_successfully? -%}
+      送信完了
+    {%- elsif form.errors -%}
+      <div class="form__message">エラー発生</div>
+      <ul class="form-status-list caption-large" role="list">
+        <li>
+          <a href="#ContactForm-email" class="link">
+            {{ form.errors.translated_fields.email | capitalize }}
+            {{ form.errors.messages.email }}
+          </a>
+        </li>
+      </ul>
+    {%- endif -%}
+    <div class="field field--with-error">
+      <input
+        class="field__input"
+        autocomplete="name"
+        type="text"
+        id="ContactForm-name"
+        name="contact[お名前]"
+        value="{% if form.name %}{{ form.name }}{% elsif customer %}{{ customer.name }}{% endif %}"
+        placeholder="お名前"
+      >
+      <label class="field__label" for="ContactForm-name">お名前</label>
+    </div>
+    <div class="field field--with-error">
+      <input
+        autocomplete="email"
+        type="email"
+        id="ContactForm-email"
+        class="field__input"
+        name="contact[email]"
+        spellcheck="false"
+        autocapitalize="off"
+        value="{% if form.email %}{{ form.email }}{% elsif customer %}{{ customer.email }}{% endif %}"
+        aria-required="true"
+        {% if form.errors contains 'email' %}
+          aria-invalid="true"
+          aria-describedby="ContactForm-email-error"
+        {% endif %}
+        placeholder="メールアドレス"
+      >
+      <label class="field__label" for="ContactForm-email">
+        メールアドレス
+        <span aria-hidden="true">*</span></label
+      >
+      {%- if form.errors contains 'email' -%}
+        <small class="contact__field-error" id="ContactForm-email-error">
+          <span class="visually-hidden">アクセシビリティエラー</span>
+          <span class="form__message">
+            {{- form.errors.translated_fields.email | capitalize }}
+            {{ form.errors.messages.email -}}
+          </span>
+        </small>
+      {%- endif -%}
+    </div>
+    <div class="field field--with-error">
+      <input
+        type="tel"
+        id="ContactForm-phone"
+        class="field__input"
+        autocomplete="tel"
+        name="contact[電話番号]"
+        pattern="[0-9\-]*"
+        value="{% if form.phone %}{{ form.phone }}{% elsif customer %}{{ customer.phone }}{% endif %}"
+        placeholder="電話番号"
+      >
+      <label class="field__label" for="ContactForm-phone">電話番号</label>
+    </div>
+    <div class="field field--with-error">
+      <textarea
+        rows="10"
+        id="ContactForm-body"
+        class="text-area field__input"
+        name="contact[問い合わせ内容]"
+        placeholder="問い合わせ内容"
+      >
+        {{- form.body -}}
+      </textarea>
+      <label class="form__label field__label" for="ContactForm-body"> 問い合わせ内容 </label>
+    </div>
+    <div class="contact__button">
+      <button type="submit" class="button">送信</button>
+    </div>
+  {%- endform -%}
 </section>
 <section>
   <h2>featured-blog</h2>
+  {%- assign display_blog = blogs.news -%}
+  {%- assign display_blog_limit = 1 -%}
+  {%- if display_blog != blank and display_blog.articles_count > 0 -%}
+    <ul>
+      {%- for article in display_blog.articles limit: display_blog_limit -%}
+        <li>
+          {%- if article and article != empty -%}
+            <div>
+              <div
+                class=""
+              >
+                <div>
+                  {%- if article.image -%}
+                    <img
+                      srcset="
+                        {%- if article.image.src.width >= 165 -%}{{ article.image.src | image_url: width: 165 }} 165w,{%- endif -%}
+                        {%- if article.image.src.width >= 360 -%}{{ article.image.src | image_url: width: 360 }} 360w,{%- endif -%}
+                        {%- if article.image.src.width >= 533 -%}{{ article.image.src | image_url: width: 533 }} 533w,{%- endif -%}
+                        {%- if article.image.src.width >= 720 -%}{{ article.image.src | image_url: width: 720 }} 720w,{%- endif -%}
+                        {%- if article.image.src.width >= 1000 -%}{{ article.image.src | image_url: width: 1000 }} 1000w,{%- endif -%}
+                        {%- if article.image.src.width >= 1500 -%}{{ article.image.src | image_url: width: 1500 }} 1500w,{%- endif -%}
+                        {{ article.image.src | image_url }} {{ article.image.src.width }}w
+                      "
+                      src="{{ article.image.src | image_url: width: 533 }}"
+                      sizes="(min-width: {{ settings.page_width }}px) {{ settings.page_width | minus: 100 | divided_by: 2 }}px, (min-width: 750px) calc((100vw - 130px) / 2), calc((100vw - 50px) / 2)"
+                      alt="{{ article.image.src.alt | escape }}"
+                      {% unless lazy_load == false %}
+                        loading="lazy"
+                      {% endunless %}
+                      width="{{ article.image.width }}"
+                      height="{{ article.image.height }}"
+                    >
+                  {%- endif -%}
+                  <div class="card__content">
+                    <div>
+                      <a href="{{ article.url }}" class="full-unstyled-link">
+                        {{ article.title | truncate: 50 | escape }}
+                      </a>
+                      <div>
+                        <span class="circle-divider">{{ article.published_at | time_tag: format: 'date' }}</span>
+                        <span>{{ article.author }}</span>
+                      </div>
+                      {%- if article.excerpt.size > 0 or article.content.size > 0 -%}
+                        <p class="article-card__excerpt rte-width">
+                          {%- if article.excerpt.size > 0 -%}
+                            {{ article.excerpt | strip_html | truncatewords: 30 }}
+                          {%- else -%}
+                            {{ article.content | strip_html | truncatewords: 30 }}
+                          {%- endif -%}
+                        </p>
+                        <div class="article-card__footer">
+                          {%- if article.comments_count > 0 and blog.comments_enabled? -%}
+                            <span>{{ 'blogs.article.comments' | t: count: article.comments_count }}</span>
+                          {%- endif -%}
+                        </div>
+                      {%- endif -%}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          {%- endif -%}
+        </li>
+      {%- endfor -%}
+    </ul>
+    {%- if display_blog_limit < display_blog.articles_count -%}
+      <div>
+        <a
+          href="{{ display_blog.url }}"
+          aria-labelledby="ViewAll-{{ section.id }} SectionHeading-{{ section.id }}"
+        >
+          一覧
+        </a>
+      </div>
+    {%- endif -%}
+  {%- endif -%}
 </section>
 <section>
   <h2>page</h2>
+  {%- assign display_page = pages['セクション呼び出し'] -%}
+  <h2>
+    {{ display_page.title | escape }}
+  </h2>
+  {{ display_page.content }}
 </section>

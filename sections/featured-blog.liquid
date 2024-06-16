@@ -45,6 +45,7 @@
         {%- endif -%}
       </div>
     {%- endunless -%}
+    {{ section.settings | json }}
     {%- if section.settings.blog != blank and section.settings.blog.articles_count > 0 -%}
       <slider-component class="slider-mobile-gutter">
         <ul

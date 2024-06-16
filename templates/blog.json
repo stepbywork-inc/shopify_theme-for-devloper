@@ -1,1 +1,10 @@
-{"sections":{"main":{"type":"main-blog","settings":{"layout":"grid","show_image":true,"image_height":"medium","show_date":true,"show_author":false,"padding_top":36,"padding_bottom":36}}},"order":["main"]}
+{
+  "sections": {
+    "sbw_blog": {
+      "type": "sbw_blog"
+    }
+  },
+  "order": [
+    "sbw_blog"
+  ]
+}

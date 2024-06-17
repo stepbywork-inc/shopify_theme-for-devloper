@@ -1,14 +1,10 @@
 {
   "sections": {
-    "main": {
-      "type": "main-register",
-      "settings": {
-        "padding_top": 36,
-        "padding_bottom": 36
-      }
+    "sbw_register": {
+      "type": "sbw_register"
     }
   },
   "order": [
-    "main"
+    "sbw_register"
   ]
 }

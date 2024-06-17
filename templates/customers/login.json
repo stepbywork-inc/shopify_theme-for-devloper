@@ -1,14 +1,10 @@
 {
   "sections": {
-    "main": {
-      "type": "main-login",
-      "settings": {
-        "padding_top": 36,
-        "padding_bottom": 36
-      }
+    "sbw_login": {
+      "type": "sbw_login"
     }
   },
   "order": [
-    "main"
+    "sbw_login"
   ]
 }

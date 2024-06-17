@@ -1,11 +1,11 @@
 {
   "sections": {
-    "main": {
-      "type": "main-404",
+    "sbw_404": {
+      "type": "sbw_404",
       "settings": {}
     }
   },
   "order": [
-    "main"
+    "sbw_404"
   ]
 }

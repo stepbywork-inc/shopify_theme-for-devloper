@@ -1,5 +1,5 @@
 <section>
-  <h2>特集商品</h2>
+  <h2>{{ collection.title }}</h2>
   {%- assign products_per_page = 2 -%}
   {%- paginate collection.products by products_per_page -%}
     <facet-filters-form class="facets facets-vertical-sort page-width small-hide no-js-hidden">

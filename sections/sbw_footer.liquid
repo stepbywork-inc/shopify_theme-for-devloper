@@ -1,0 +1,74 @@
+<footer>
+  <a href="{{ routes.root_url }}">
+    {{ shop.name }}
+  </a>
+
+  <ul role="list">
+    {%- for link in section.settings.menu.links -%}
+      <li>
+        <a
+          href="{{ link.url }}"
+          {% if link.current %}
+            aria-current="page"
+          {% endif %}
+        >
+          <span
+            {%- if link.current %}
+              class="is-current"
+            {% endif %}
+          >
+            {{- link.title | escape -}}
+          </span>
+        </a>
+        {%- if link.links != blank -%}
+          <ul>
+            {%- for childlink in link.links -%}
+              <li>
+                <a
+                  href="{{ childlink.url }}"
+                  class="{% if childlink.current %}is-active{% endif %}"
+                  {% if childlink.current %}
+                    aria-current="page"
+                  {% endif %}
+                >
+                  {{ childlink.title | escape }}
+                </a>
+                {%- if childlink.links != blank -%}
+                  <ul>
+                    {%- for grandchildlink in childlink.links -%}
+                      <li>
+                        <a
+                          href="{{ grandchildlink.url }}"
+                          class="{% if grandchildlink.current %}is-active{% endif %}"
+                          {% if grandchildlink.current %}
+                            aria-current="page"
+                          {% endif %}
+                        >
+                          {{ grandchildlink.title | escape }}
+                        </a>
+                      </li>
+                    {%- endfor -%}
+                  </ul>
+                {%- endif -%}
+              </li>
+            {%- endfor -%}
+          </ul>
+        {%- endif -%}
+      </li>
+    {%- endfor -%}
+  </ul>
+</footer>
+
+{% schema %}
+{
+  "name": "フッター",
+  "settings": [
+    {
+      "type": "link_list",
+      "id": "menu",
+      "default": "main-menu",
+      "label": "メニュー"
+    }
+  ]
+}
+{% endschema %}

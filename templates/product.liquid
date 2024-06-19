@@ -1,0 +1,173 @@
+<section>
+  <h2>特集商品</h2>
+  <div>
+    {%- if product.selected_or_first_available_variant.featured_media != null -%}
+      {%- assign media = product.selected_or_first_available_variant.featured_media -%}
+      <div class="product__media-item" data-media-id="{{ section.id }}-{{ media.id }}">
+        {% render 'product-thumbnail',
+          media: media,
+          position: 'featured',
+          loop: section.settings.enable_video_looping,
+          modal_id: section.id,
+          xr_button: false,
+          media_width: media_width,
+          media_fit: section.settings.media_fit,
+          constrain_to_viewport: section.settings.constrain_to_viewport
+        %}
+      </div>
+    {%- endif -%}
+    {%- liquid
+      assign media_to_render = product.featured_media.id
+      for variant in product.variants
+        assign media_to_render = media_to_render | append: variant.featured_media.id | append: ' '
+      endfor
+    -%}
+    {%- for media in product.media -%}
+      {%- if media_to_render contains media.id
+        and media.id != product.selected_or_first_available_variant.featured_media.id
+      -%}
+        <div class="product__media-item" data-media-id="{{ section.id }}-{{ media.id }}">
+          {% render 'product-thumbnail',
+            media: media,
+            position: forloop.index,
+            loop: section.settings.enable_video_looping,
+            modal_id: section.id,
+            xr_button: false,
+            media_width: media_width,
+            media_fit: section.settings.media_fit,
+            constrain_to_viewport: section.settings.constrain_to_viewport
+          %}
+        </div>
+      {%- endif -%}
+    {%- endfor -%}
+  </div>
+  <div class="product__info-wrapper grid__item">
+    <product-info
+      data-section="{{ section.id }}"
+      data-url="{{ product.url }}"
+    >
+      <h3>
+        {{ product.title | escape }}
+      </h3>
+      <ul>
+        <li>商品タイプ：{{ product.type }}</li>
+        <li>販売元：{{ product.vendor }}</li>
+        <li>
+          タグ：
+          {%- for tag in product.tags -%}
+            {{ tag }}
+          {%- endfor -%}
+        </li>
+        <li>メタフィールド1：{{ product.metafields.test_data.binding_mount }}</li>
+        <li>
+          メタフィールド2：{{ product.metafields.test_data.snowboard_length.value -}}
+          {{- product.metafields.test_data.snowboard_length.unit }}
+        </li>
+      </ul>
+      <div>
+        {%- liquid
+          assign target = product
+          assign compare_at_price = target.compare_at_price
+          assign price = target.price | default: 1999
+          assign available = target.available | default: false
+          assign money_price = price | money
+
+          if target == product and product.price_varies
+            assign money_price = money_price | append: 'から'
+          endif
+        -%}
+
+        <div
+          class="
+            {%- if available == false %} is-sold-out {% endif -%}
+            {%- if compare_at_price > price %} is-on-sale {% endif -%}
+          "
+        >
+          <div>価格：{{ money_price }}</div>
+          {%- if product.price_varies == false and compare_at_price > price %}
+            割引前価格：
+            <s>
+              {{ compare_at_price | money }}
+            </s>
+          {%- endif -%}
+        </div>
+      </div>
+      <div>
+        {%- if product.available == false -%}
+          売り切れ
+        {%- elsif product.compare_at_price > product.price and product.available -%}
+          セール中
+        {%- endif -%}
+      </div>
+      {%- if product != blank -%}
+        {%- for target_varient in product.variants -%}
+          {%- form 'product', product -%}
+            <table>
+              <tr>
+                <td>
+                  {% if target_varient.image %}
+                    <img
+                      src="{{ target_varient.image | image_url: width: 86 }}"
+                      alt="{{ target_varient.title | escape }}"
+                    >
+                  {% endif %}
+                </td>
+                <td>
+                  {%- assign cart_qty = cart | item_count_for_variant: target_varient.id -%}
+                  <input type="hidden" name="id" value="{{ target_varient.id }}">{{ target_varient.title -}}
+                  (カートの中
+                  {{ cart_qty }}
+                  )
+                </td>
+                <td>
+                  <input
+                    type="number"
+                    name="quantity"
+                    id="quantity"
+                    value="{{ target_varient.quantity_rule.min }}"
+                  >
+                </td>
+                <td>
+                  {%- liquid
+                    assign compare_at_price = target_varient.compare_at_price
+                    assign price = target_varient.price | default: 1999
+                    assign available = target_varient.available | default: false
+                    assign money_price = price | money
+                  -%}
+
+                  <div
+                    class="
+                      {%- if available == false %} is-sold-out {% endif -%}
+                      {%- if compare_at_price > price %} is-on-sale {% endif -%}
+                    "
+                  >
+                    <div>価格：{{ money_price }}</div>
+                    {%- if target_varient.compare_at_price > target_varient.price %}
+                      割引前価格：
+                      <s>
+                        {{ compare_at_price | money }}
+                      </s>
+                    {%- endif -%}
+                  </div>
+                </td>
+                <td>
+                  <button type="submit">カートに入れる</button>
+                </td>
+              </tr>
+            </table>
+            {{ form | payment_terms }}
+          {%- endform -%}
+        {%- endfor -%}
+      {%- endif -%}
+      <a
+        {% if product == blank %}
+          role="link" aria-disabled="true"
+        {% else %}
+          href="{{ product.url }}"
+        {% endif %}
+      >
+        詳細ページへ
+      </a>
+    </product-info>
+  </div>
+</section>

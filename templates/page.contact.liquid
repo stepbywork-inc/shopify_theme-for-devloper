@@ -1,0 +1,89 @@
+<section>
+  <h2>contact-form</h2>
+  {%- form 'contact', id: 'ContactForm', class: 'isolate' -%}
+    {%- if form.posted_successfully? -%}
+      送信完了
+    {%- elsif form.errors -%}
+      <div class="form__message">エラー発生</div>
+      <ul class="form-status-list caption-large" role="list">
+        <li>
+          <a href="#ContactForm-email" class="link">
+            {{ form.errors.translated_fields.email | capitalize }}
+            {{ form.errors.messages.email }}
+          </a>
+        </li>
+      </ul>
+    {%- endif -%}
+    <div class="field field--with-error">
+      <input
+        class="field__input"
+        autocomplete="name"
+        type="text"
+        id="ContactForm-name"
+        name="contact[お名前]"
+        value="{% if form.name %}{{ form.name }}{% elsif customer %}{{ customer.name }}{% endif %}"
+        placeholder="お名前"
+      >
+      <label class="field__label" for="ContactForm-name">お名前</label>
+    </div>
+    <div class="field field--with-error">
+      <input
+        autocomplete="email"
+        type="email"
+        id="ContactForm-email"
+        class="field__input"
+        name="contact[email]"
+        spellcheck="false"
+        autocapitalize="off"
+        value="{% if form.email %}{{ form.email }}{% elsif customer %}{{ customer.email }}{% endif %}"
+        aria-required="true"
+        {% if form.errors contains 'email' %}
+          aria-invalid="true"
+          aria-describedby="ContactForm-email-error"
+        {% endif %}
+        placeholder="メールアドレス"
+      >
+      <label class="field__label" for="ContactForm-email">
+        メールアドレス
+        <span aria-hidden="true">*</span></label
+      >
+      {%- if form.errors contains 'email' -%}
+        <small class="contact__field-error" id="ContactForm-email-error">
+          <span class="visually-hidden">アクセシビリティエラー</span>
+          <span class="form__message">
+            {{- form.errors.translated_fields.email | capitalize }}
+            {{ form.errors.messages.email -}}
+          </span>
+        </small>
+      {%- endif -%}
+    </div>
+    <div class="field field--with-error">
+      <input
+        type="tel"
+        id="ContactForm-phone"
+        class="field__input"
+        autocomplete="tel"
+        name="contact[電話番号]"
+        pattern="[0-9\-]*"
+        value="{% if form.phone %}{{ form.phone }}{% elsif customer %}{{ customer.phone }}{% endif %}"
+        placeholder="電話番号"
+      >
+      <label class="field__label" for="ContactForm-phone">電話番号</label>
+    </div>
+    <div class="field field--with-error">
+      <textarea
+        rows="10"
+        id="ContactForm-body"
+        class="text-area field__input"
+        name="contact[問い合わせ内容]"
+        placeholder="問い合わせ内容"
+      >
+        {{- form.body -}}
+      </textarea>
+      <label class="form__label field__label" for="ContactForm-body"> 問い合わせ内容 </label>
+    </div>
+    <div class="contact__button">
+      <button type="submit" class="button">送信</button>
+    </div>
+  {%- endform -%}
+</section>

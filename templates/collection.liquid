@@ -1,0 +1,220 @@
+<section>
+  <h2>{{ collection.title }}</h2>
+  {%- assign products_per_page = 2 -%}
+  {%- paginate collection.products by products_per_page -%}
+    <facet-filters-form class="facets facets-vertical-sort page-width small-hide no-js-hidden">
+      <form class="facets-vertical-form" id="FacetSortForm">
+        <div class="facet-filters sorting caption">
+          <div class="facet-filters__field">
+            <h2 class="facet-filters__label caption-large text-body">
+              <label for="SortBy">{{ 'products.facets.sort_by_label' | t }}</label>
+            </h2>
+            <div class="select">
+              {%- assign sort_by = collection.sort_by | default: collection.default_sort_by -%}
+              <select
+                name="sort_by"
+                class="facet-filters__sort select__select caption-large"
+                id="SortBy"
+                aria-describedby="a11y-refresh-page-message"
+              >
+                {%- for option in collection.sort_options -%}
+                  <option
+                    value="{{ option.value | escape }}"
+                    {% if option.value == sort_by %}
+                      selected="selected"
+                    {% endif %}
+                  >
+                    {{ option.name | escape }}
+                  </option>
+                {%- endfor -%}
+              </select>
+            </div>
+          </div>
+          <noscript>
+            <button type="submit" class="facets__button-no-js button button--secondary">
+              {{ 'products.facets.sort_button' | t }}
+            </button>
+          </noscript>
+        </div>
+
+        <div class="product-count-vertical light" role="status">
+          <h2 class="product-count__text text-body">
+            <span id="ProductCountDesktop">
+              {%- if collection.results_count -%}
+                {{
+                  'templates.search.results_with_count'
+                  | t: terms: collection.terms, count: collection.results_count
+                }}
+              {%- elsif collection.products_count == collection.all_products_count -%}
+                {{ 'products.facets.product_count_simple' | t: count: collection.products_count }}
+              {%- else -%}
+                {{
+                  'products.facets.product_count'
+                  | t: product_count: collection.products_count, count: collection.all_products_count
+                }}
+              {%- endif -%}
+            </span>
+          </h2>
+        </div>
+      </form>
+    </facet-filters-form>
+    <ol
+      role="list"
+    >
+      {%- for product in collection.products -%}
+        <li>
+          {%- if product.featured_media -%}
+            <img
+              srcset="
+                {%- if product.featured_media.width >= 165 -%}{{ product.featured_media | image_url: width: 165 }} 165w,{%- endif -%}
+                {%- if product.featured_media.width >= 360 -%}{{ product.featured_media | image_url: width: 360 }} 360w,{%- endif -%}
+                {%- if product.featured_media.width >= 533 -%}{{ product.featured_media | image_url: width: 533 }} 533w,{%- endif -%}
+                {%- if product.featured_media.width >= 720 -%}{{ product.featured_media | image_url: width: 720 }} 720w,{%- endif -%}
+                {%- if product.featured_media.width >= 940 -%}{{ product.featured_media | image_url: width: 940 }} 940w,{%- endif -%}
+                {%- if product.featured_media.width >= 1066 -%}{{ product.featured_media | image_url: width: 1066 }} 1066w,{%- endif -%}
+                {{ product.featured_media | image_url }} {{ product.featured_media.width }}w
+              "
+              src="{{ product.featured_media | image_url: width: 533 }}"
+              alt="{{ product.featured_media.alt | escape }}"
+              width="{{ product.featured_media.width }}"
+              height="{{ product.featured_media.height }}"
+            >
+            {%- if product.media[1] != null -%}
+              <img
+                srcset="
+                  {%- if product.media[1].width >= 165 -%}{{ product.media[1] | image_url: width: 165 }} 165w,{%- endif -%}
+                  {%- if product.media[1].width >= 360 -%}{{ product.media[1] | image_url: width: 360 }} 360w,{%- endif -%}
+                  {%- if product.media[1].width >= 533 -%}{{ product.media[1] | image_url: width: 533 }} 533w,{%- endif -%}
+                  {%- if product.media[1].width >= 720 -%}{{ product.media[1] | image_url: width: 720 }} 720w,{%- endif -%}
+                  {%- if product.media[1].width >= 940 -%}{{ product.media[1] | image_url: width: 940 }} 940w,{%- endif -%}
+                  {%- if product.media[1].width >= 1066 -%}{{ product.media[1] | image_url: width: 1066 }} 1066w,{%- endif -%}
+                  {{ product.media[1] | image_url }} {{ product.media[1].width }}w
+                "
+                src="{{ product.media[1] | image_url: width: 533 }}"
+                width="{{ product.media[1].width }}"
+                height="{{ product.media[1].height }}"
+              >
+            {%- endif -%}
+          {%- endif -%}
+          <h3>
+            <a
+              href="{{ product.url }}"
+              aria-labelledby="CardLink-{{ section_id }}-{{ product.id }}"
+            >
+              {{ product.title | escape }}
+            </a>
+          </h3>
+          <ul>
+            <li>商品タイプ：{{ product.type }}</li>
+            <li>販売元：{{ product.vendor }}</li>
+            <li>
+              タグ：
+              {%- for tag in product.tags -%}
+                {{ tag }}
+              {%- endfor -%}
+            </li>
+            <li>メタフィールド1：{{ product.metafields.test_data.binding_mount }}</li>
+            <li>
+              メタフィールド2：{{ product.metafields.test_data.snowboard_length.value -}}
+              {{- product.metafields.test_data.snowboard_length.unit }}
+            </li>
+          </ul>
+          <div>
+            {%- liquid
+              assign target = product
+              assign compare_at_price = target.compare_at_price
+              assign price = target.price | default: 1999
+              assign available = target.available | default: false
+              assign money_price = price | money
+
+              if target == product and product.price_varies
+                assign money_price = money_price | append: 'から'
+              endif
+            -%}
+
+            <div
+              class="
+                {%- if available == false %} is-sold-out {% endif -%}
+                {%- if compare_at_price > price %} is-on-sale {% endif -%}
+              "
+            >
+              <div>価格：{{ money_price }}</div>
+              {%- if product.price_varies == false and compare_at_price > price %}
+                割引前価格：
+                <s>
+                  {{ compare_at_price | money }}
+                </s>
+              {%- endif -%}
+            </div>
+          </div>
+          <div>
+            {%- if product.available == false -%}
+              売り切れ
+            {%- elsif product.compare_at_price > product.price and product.available -%}
+              セール中
+            {%- endif -%}
+          </div>
+        </li>
+      {%- endfor -%}
+    </ol>
+    {%- if paginate.pages > 1 -%}
+      {%- if paginate.parts.size > 0 -%}
+        <div class="pagination-wrapper">
+          <nav class="pagination" role="navigation" aria-label="{{ 'general.pagination.label' | t }}">
+            <ul class="pagination__list list-unstyled" role="list">
+              {%- if paginate.previous -%}
+                <li>
+                  <a
+                    href="{{ paginate.previous.url }}{{ anchor }}"
+                    class="pagination__item pagination__item--next pagination__item-arrow link motion-reduce"
+                    aria-label="{{ 'general.pagination.previous' | t }}"
+                  >
+                  </a>
+                </li>
+              {%- endif -%}
+
+              {%- for part in paginate.parts -%}
+                <li>
+                  {%- if part.is_link -%}
+                    <a
+                      href="{{ part.url }}{{ anchor }}"
+                      class="pagination__item link"
+                      aria-label="{{ 'general.pagination.page' | t: number: part.title }}"
+                    >
+                      {{- part.title -}}
+                    </a>
+                  {%- else -%}
+                    {%- if part.title == paginate.current_page -%}
+                      <a
+                        role="link"
+                        aria-disabled="true"
+                        class="pagination__item pagination__item--current light"
+                        aria-current="page"
+                        aria-label="{{ 'general.pagination.page' | t: number: part.title }}"
+                      >
+                        {{- part.title -}}
+                      </a>
+                    {%- else -%}
+                      <span class="pagination__item">{{ part.title }}</span>
+                    {%- endif -%}
+                  {%- endif -%}
+                </li>
+              {%- endfor -%}
+
+              {%- if paginate.next -%}
+                <li>
+                  <a
+                    href="{{ paginate.next.url }}{{ anchor }}"
+                    class="pagination__item pagination__item--prev pagination__item-arrow link motion-reduce"
+                    aria-label="{{ 'general.pagination.next' | t }}"
+                  >
+                  </a>
+                </li>
+              {%- endif -%}
+            </ul>
+          </nav>
+        </div>
+      {%- endif -%}
+    {%- endif -%}
+  {%- endpaginate -%}
+</section>

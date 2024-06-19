@@ -59,7 +59,104 @@
   </head>
 
   <body>
-    {% section 'sbw_header' %}
+    <header>
+      <a href="{{ routes.root_url }}">
+        {{ shop.name }}
+      </a>
+
+      <ul role="list">
+        {%- for link in section.settings.menu.links -%}
+          <li>
+            <a
+              href="{{ link.url }}"
+              {% if link.current %}
+                aria-current="page"
+              {% endif %}
+            >
+              <span
+                {%- if link.current %}
+                  class="is-current"
+                {% endif %}
+              >
+                {{- link.title | escape -}}
+              </span>
+            </a>
+            {%- if link.links != blank -%}
+              <ul>
+                {%- for childlink in link.links -%}
+                  <li>
+                    <a
+                      href="{{ childlink.url }}"
+                      class="{% if childlink.current %}is-active{% endif %}"
+                      {% if childlink.current %}
+                        aria-current="page"
+                      {% endif %}
+                    >
+                      {{ childlink.title | escape }}
+                    </a>
+                    {%- if childlink.links != blank -%}
+                      <ul>
+                        {%- for grandchildlink in childlink.links -%}
+                          <li>
+                            <a
+                              href="{{ grandchildlink.url }}"
+                              class="{% if grandchildlink.current %}is-active{% endif %}"
+                              {% if grandchildlink.current %}
+                                aria-current="page"
+                              {% endif %}
+                            >
+                              {{ grandchildlink.title | escape }}
+                            </a>
+                          </li>
+                        {%- endfor -%}
+                      </ul>
+                    {%- endif -%}
+                  </li>
+                {%- endfor -%}
+              </ul>
+            {%- endif -%}
+          </li>
+        {%- endfor -%}
+      </ul>
+
+      <ul>
+        {%- if shop.customer_accounts_enabled -%}
+          <li>
+            <a href="{%- if customer -%}{{ routes.account_url }}{%- else -%}{{ routes.account_login_url }}{%- endif -%}">
+              マイページ
+            </a>
+          </li>
+        {%- endif -%}
+
+        <li>
+          <a href="{{ routes.cart_url }}">
+            {%- if cart == empty -%}
+              カートは空
+            {%- else -%}
+              カートは
+              {%- if cart.item_count < 100 -%}
+                {{ cart.item_count }}
+              {%- endif -%}
+              100以上
+            {%- endif -%}
+          </a>
+        </li>
+      </ul>
+    </header>
+
+    {% schema %}
+{
+  "name": "ヘッダー",
+  "settings": [
+    {
+      "type": "link_list",
+      "id": "menu",
+      "default": "main-menu",
+      "label": "メニュー"
+    }
+  ]
+}
+    {% endschema %}
     <main role="main" tabindex="-1">
       {{ content_for_layout }}
     </main>
@@ -67,7 +164,7 @@
       <a href="{{ routes.root_url }}">
         {{ shop.name }}
       </a>
-    
+
       <ul role="list">
         {%- for link in section.settings.menu.links -%}
           <li>

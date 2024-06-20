@@ -1,9 +1,7 @@
 <div>
   <div>
     <h1 class="customer__title">マイページ</h1>
-    <a href="{{ routes.account_logout_url }}">
-     ログアウト
-    </a>
+    <a href="{{ routes.account_logout_url }}"> ログアウト </a>
   </div>
 
   <h2>注文履歴</h2>
@@ -16,9 +14,7 @@
             <th id="ColumnOrder" scope="col" role="columnheader">注文番号</th>
             <th id="ColumnDate" scope="col" role="columnheader">注文日</th>
             <th id="ColumnPayment" scope="col" role="columnheader">決済状況</th>
-            <th id="ColumnFulfillment" scope="col" role="columnheader">
-              配送状況
-            </th>
+            <th id="ColumnFulfillment" scope="col" role="columnheader">配送状況</th>
             <th id="ColumnTotal" scope="col" role="columnheader">合計金額</th>
           </tr>
         </thead>
@@ -71,9 +67,7 @@
           <ul role="list">
             {%- if paginate.previous -%}
               <li>
-                <a href="{{ paginate.previous.url }}" aria-label="{{ 'general.pagination.previous' | t }}">
-                  前へ
-                </a>
+                <a href="{{ paginate.previous.url }}" aria-label="{{ 'general.pagination.previous' | t }}"> 前へ </a>
               </li>
             {%- endif -%}
 
@@ -97,9 +91,7 @@
 
             {%- if paginate.next -%}
               <li>
-                <a href="{{ paginate.next.url }}" aria-label="{{ 'general.pagination.next' | t }}">
-                  次へ
-                </a>
+                <a href="{{ paginate.next.url }}" aria-label="{{ 'general.pagination.next' | t }}"> 次へ </a>
               </li>
             {%- endif -%}
           </ul>
@@ -113,6 +105,4 @@
 
 {{ customer.default_address | format_address }}
 
-<a href="{{ routes.account_addresses_url }}">
-  登録されている住所を見る ({{ customer.addresses_count }})
-</a>
+<a href="{{ routes.account_addresses_url }}"> 登録されている住所を見る ({{ customer.addresses_count }}) </a>
